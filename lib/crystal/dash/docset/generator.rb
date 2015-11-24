@@ -54,7 +54,7 @@ module Crystal::Dash::Docset::Generator
     end
 
     def create_source_docs
-      @page_urls[0..2].each do |url|
+      @page_urls.each do |url|
         yield url if block_given?
         charset = nil
         FileUtils.mkdir_p(File.dirname(url))
@@ -65,6 +65,11 @@ module Crystal::Dash::Docset::Generator
           end
           doc = Nokogiri::HTML.parse(html, nil, charset)
           doc.css("div#types-list").remove
+          doc.css("a.method-permalink").remove
+          doc.css("a").each do |node|
+            node.remove if node.attr("href") == "https://travis-ci.org/manastech/crystal"
+            node.remove if node.attr("href") == "https://www.bountysource.com/teams/crystal-lang/fundraisers/702-crystal-language"
+          end
           output.write(doc.to_html)
         end
       end
