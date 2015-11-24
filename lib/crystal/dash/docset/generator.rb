@@ -7,11 +7,13 @@ module Crystal::Dash::Docset::Generator
   class Generator
     attr_accessor :root_url
     attr_accessor :package_name
+    attr_accessor :output_directory
 
     def initialize(root_url: nil, package_name: nil)
       @root_url = root_url
       @package_name = package_name
       @path_to_this = File.expand_path(File.dirname(__FILE__))
+      @output_directory = File.expand_path(File.join(Dir.pwd, @package_name))
     end
 
     def dashing_installed?
@@ -26,6 +28,7 @@ module Crystal::Dash::Docset::Generator
     end
 
     def create_css
+      Dir.chdir(@output_directory)
       Dir.mkdir("css")
       open("css/style.css", "wb") do |output|
         open("#{root_url}css/style.css") do |f|
@@ -54,7 +57,8 @@ module Crystal::Dash::Docset::Generator
     end
 
     def create_source_docs
-      @page_urls.each do |url|
+      Dir.chdir(@output_directory)
+      @page_urls[0..1].each do |url|
         yield url if block_given?
         charset = nil
         FileUtils.mkdir_p(File.dirname(url))
@@ -77,11 +81,13 @@ module Crystal::Dash::Docset::Generator
     end
 
     def copy_dashing_config
+      Dir.chdir(@output_directory)
       FileUtils.cp(File.join(@path_to_this, "dashing.json"), "dashing.json")
       FileUtils.cp(File.join(@path_to_this, "crystal-icon.png"), "crystal-icon.png")
     end
 
     def generate_dash_docset
+      Dir.chdir(@output_directory)
       `dashing build #{@package_name}`
     end
   end

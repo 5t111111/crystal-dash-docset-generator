@@ -5,11 +5,11 @@ class Crystal::Dash::Docset::GeneratorTest < Minitest::Test
   i_suck_and_my_tests_are_order_dependent!
 
   def setup
+    Dir.chdir(File.join(File.dirname(__FILE__), "test_data"))
     @generator = Crystal::Dash::Docset::Generator::Generator.new(
       root_url: "http://crystal-lang.org/api/",
       package_name: "crystal"
     )
-    Dir.chdir(File.join(File.dirname(__FILE__), "test_data"))
     if File.exist?(@generator.package_name)
       FileUtils.rm_rf(@generator.package_name)
     end
@@ -33,6 +33,11 @@ class Crystal::Dash::Docset::GeneratorTest < Minitest::Test
     assert_equal @generator.package_name, "crystal"
   end
 
+  def test_that_it_has_output_directory
+    expected = File.join(File.expand_path(File.dirname(__FILE__)), "test_data", @generator.package_name)
+    assert_equal expected, @generator.output_directory
+  end
+
   def test_prepare_directory_returns_nil_if_already_exist
     Dir.mkdir(@generator.package_name)
     assert_nil @generator.prepare_directory
@@ -40,7 +45,7 @@ class Crystal::Dash::Docset::GeneratorTest < Minitest::Test
 
   def test_prepare_directory_works
     assert_equal 0, @generator.prepare_directory
-    assert_equal File.join(File.dirname(__FILE__), "test_data", @generator.package_name), Dir.getwd
+    assert_equal File.join(File.dirname(__FILE__), "test_data", @generator.package_name), Dir.pwd
     Dir.chdir(File.join(File.dirname(__FILE__), "test_data"))
     assert File.directory?(@generator.package_name)
   end
