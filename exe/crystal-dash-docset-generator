@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require "crystal/dash/docset/generator"
+
+@generator = Crystal::Dash::Docset::Generator::Generator.new(
+  root_url: "http://crystal-lang.org/api/",
+  package_name: "crystal"
+)
+@generator.prepare_directory
+@generator.create_css
+@generator.set_page_urls
+@generator.create_source_docs { |file| puts file }
+@generator.copy_dashing_config
+@generator.generate_dash_docset

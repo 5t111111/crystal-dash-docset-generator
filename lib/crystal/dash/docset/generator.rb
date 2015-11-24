@@ -11,6 +11,12 @@ module Crystal::Dash::Docset::Generator
     def initialize(root_url: nil, package_name: nil)
       @root_url = root_url
       @package_name = package_name
+      @path_to_this = File.expand_path(File.dirname(__FILE__))
+    end
+
+    def dashing_installed?
+      system("hash dashing 2>/dev/null")
+      $?.exitstatus == 0 ? true : false
     end
 
     def prepare_directory
@@ -48,10 +54,9 @@ module Crystal::Dash::Docset::Generator
     end
 
     def create_source_docs
-      @page_urls.each do |url|
-        puts url
+      @page_urls[0..2].each do |url|
+        yield url if block_given?
         charset = nil
-        # puts URI.join(@root_url, url)
         FileUtils.mkdir_p(File.dirname(url))
         open(url, "wb") do |output|
           html = open(URI.join(@root_url, url)) do |f|
@@ -64,14 +69,14 @@ module Crystal::Dash::Docset::Generator
         end
       end
     end
+
+    def copy_dashing_config
+      FileUtils.cp(File.join(@path_to_this, "dashing.json"), "dashing.json")
+      FileUtils.cp(File.join(@path_to_this, "crystal-icon.png"), "crystal-icon.png")
+    end
+
+    def generate_dash_docset
+      `dashing build #{@package_name}`
+    end
   end
 end
-
-@generator = Crystal::Dash::Docset::Generator::Generator.new(
-  root_url: "http://crystal-lang.org/api/",
-  package_name: "crystal"
-)
-@generator.prepare_directory
-@generator.create_css
-@generator.set_page_urls
-@generator.create_source_docs
