@@ -66,6 +66,7 @@ module Crystal::Dash::Docset::Generator
           doc = Nokogiri::HTML.parse(html, nil, charset)
           doc.css("div#types-list").remove
           doc.css("a.method-permalink").remove
+          doc.css("script").remove
           doc.css("a").each do |node|
             node.remove if node.attr("href") == "https://travis-ci.org/manastech/crystal"
             node.remove if node.attr("href") == "https://www.bountysource.com/teams/crystal-lang/fundraisers/702-crystal-language"
