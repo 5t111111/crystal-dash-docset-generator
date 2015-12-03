@@ -58,7 +58,7 @@ module Crystal::Dash::Docset::Generator
 
     def create_source_docs
       Dir.chdir(@output_directory)
-      @page_urls.each do |url|
+      @page_urls[0..1].each do |url|
         yield url if block_given?
         charset = nil
         FileUtils.mkdir_p(File.dirname(url))
@@ -68,7 +68,7 @@ module Crystal::Dash::Docset::Generator
             f.read
           end
           doc = Nokogiri::HTML.parse(html, nil, charset)
-          doc.title.gsub!(" - github.com/manastech/crystal", "")
+          doc.title = doc.title.gsub(" - github.com/manastech/crystal", "")
           doc.css("div#types-list").remove
           doc.css("a.method-permalink").remove
           doc.css("script").remove
