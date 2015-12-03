@@ -58,7 +58,7 @@ module Crystal::Dash::Docset::Generator
 
     def create_source_docs
       Dir.chdir(@output_directory)
-      @page_urls[0..1].each do |url|
+      @page_urls.each do |url|
         yield url if block_given?
         charset = nil
         FileUtils.mkdir_p(File.dirname(url))
