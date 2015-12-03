@@ -68,6 +68,7 @@ module Crystal::Dash::Docset::Generator
             f.read
           end
           doc = Nokogiri::HTML.parse(html, nil, charset)
+          doc.title.gsub!(" - github.com/manastech/crystal", "")
           doc.css("div#types-list").remove
           doc.css("a.method-permalink").remove
           doc.css("script").remove
