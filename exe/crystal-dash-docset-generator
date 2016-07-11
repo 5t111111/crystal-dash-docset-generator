@@ -3,7 +3,7 @@
 require "crystal/dash/docset/generator"
 
 @generator = Crystal::Dash::Docset::Generator::Generator.new(
-  root_url: "http://crystal-lang.org/api/",
+  root_url: "https://crystal-lang.org/api/",
   package_name: "crystal"
 )
 @generator.prepare_directory

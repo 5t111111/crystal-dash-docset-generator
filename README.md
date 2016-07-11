@@ -16,4 +16,4 @@ $ gem install crystal-dash-docset-generator
 $ crystal-dash-docset-generator
 ```
 
-This will fetch all API documents from http://crystal-lang.org/api/ and generate Docset in `crystal` in your current directory.
+This will fetch all API documents from https://crystal-lang.org/api/ and generate Docset in `crystal` in your current directory.
