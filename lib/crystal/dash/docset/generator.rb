@@ -86,7 +86,7 @@ module Crystal::Dash::Docset::Generator
             output.write(doc.to_html)
           end
         end
-        sleep 10
+        sleep 5
       end
     end
 
