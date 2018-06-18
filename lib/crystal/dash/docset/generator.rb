@@ -56,7 +56,7 @@ module Crystal::Dash::Docset::Generator
         end
       end
       root_doc = Nokogiri::HTML.parse(root_html, nil, charset)
-      types_list = root_doc.css("div#types-list")
+      types_list = root_doc.css("div.types-list")
       @page_urls = types_list.css('a').inject([]) do |result, anchor|
         result << anchor[:href]
       end
